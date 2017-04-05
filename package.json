@@ -1,0 +1,29 @@
+{
+    "name": "cycle-detector",
+    "version": "0.0.1",
+    "license": "MIT",
+    "description": "A small utility library for detecting and reporting cycles in objects prior to JSON.stringify",
+    "keywords": [ "JSON", "stringify", "cyclic", "detector" ],
+    "author": {
+        "name": "gcnew"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gcnew/cycle-detector.git"
+    },
+    "main": "index.js",
+    "files": [
+        "lib"
+    ],
+    "dependencies": {
+    },
+    "devDependencies": {
+        "chai":  "3.5.x",
+        "mocha": "3.2.x"
+    },
+    "scripts": {
+        "test": "mocha",
+        "buildLib": "tsc && rm -rf lib && mv built lib"
+    },
+    "private": true
+}

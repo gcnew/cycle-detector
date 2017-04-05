@@ -1,6 +1,6 @@
 {
     "name": "cycle-detector",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "license": "MIT",
     "description": "A small utility library for detecting and reporting cycles in objects prior to JSON.stringify",
     "keywords": [ "JSON", "stringify", "cyclic", "detector" ],

@@ -19,7 +19,7 @@ detectCycles(a); // root.cycle
 
 ## `applyReplacer`
 
-`applyReplacer` is the other exported function. It assists in debugging `JSON.stringify` replacers by applying the replacer onto the provided object. **NOTE: the object is mutated in-place!**
+`applyReplacer` assists in debugging `JSON.stringify` replacers by applying the replacer onto the provided object. **NOTE: the object is mutated in-place!**
 
 ```js
 import { applyReplacer } from 'cycle-detector'
@@ -32,4 +32,19 @@ applyReplacer(
 
     (key, value) => /^\$\$/.test(key) || value === '$$skip' ? undefined : value
 ); // { '$$cache': undefined, skipArray: [ undefined, 'me', undefined ] }
+```
+
+## `replaceCycles`
+
+`replaceCycles` is used to replace all cyclic references with a user provided string.
+
+```js
+import { replaceCycles } from 'cycle-detector'
+
+const a = {};
+a.cycle = a;
+a.arrCycle = [a];
+
+replaceCycles(a, path => `<Cycle ${path}>`);
+// '{"cycle":"<Cycle root.cycle>","arrCycle":["<Cycle root.arrCycle[0]>"]}'
 ```

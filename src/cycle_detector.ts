@@ -1,7 +1,7 @@
 
-export { detectCycles, applyReplacer }
+export { detectCycles, replaceCycles, applyReplacer }
 
-function detectCyclesGo(x: any, stack: any[], path: string): string|undefined {
+function go(x: any, stack: any[], path: string, replacer?: (path: string) => string): string|undefined {
     if (x == null || typeof x !== 'object') {
         return undefined;
     }
@@ -13,10 +13,15 @@ function detectCyclesGo(x: any, stack: any[], path: string): string|undefined {
             const elemPath = path + '[' + i + ']';
 
             if (stack.indexOf(e) !== -1) {
-                return elemPath;
+                if (!replacer) {
+                    return elemPath;
+                }
+
+                x[i] = replacer(elemPath);
+                continue;
             }
 
-            const res = detectCyclesGo(e, stack, elemPath);
+            const res = go(e, stack, elemPath, replacer);
             if (res) {
                 return res;
             }
@@ -29,10 +34,15 @@ function detectCyclesGo(x: any, stack: any[], path: string): string|undefined {
                     : '[' + JSON.stringify(+key || key) + ']');
 
             if (stack.indexOf(val) !== -1) {
-                return valPath;
+                if (!replacer) {
+                    return valPath;
+                }
+
+                x[key] = replacer(valPath);
+                continue;
             }
 
-            const res = detectCyclesGo(val, stack, valPath);
+            const res = go(val, stack, valPath, replacer);
             if (res) {
                 return res;
             }
@@ -44,7 +54,11 @@ function detectCyclesGo(x: any, stack: any[], path: string): string|undefined {
 }
 
 function detectCycles(x: any) {
-    return detectCyclesGo(x, [], 'root');
+    return go(x, [], 'root');
+}
+
+function replaceCycles(x: any, replacer: (path: string) => string) {
+    return (go(x, [], 'root', replacer), x);
 }
 
 function applyReplacer(x: any, replacer: (key: string|number, value: any) => any) {

@@ -1,6 +1,6 @@
 
 const { isUndefined: noErrors, strictEqual: equals } = require('chai').assert;
-const { detectCycles, applyReplacer } = require('..');
+const { detectCycles, replaceCycles, applyReplacer } = require('..');
 
 
 describe('detectCycles', () => {
@@ -87,3 +87,17 @@ describe('applyReplacer', () => {
         );
     });
 });
+
+describe('replaceCycles', () => {
+    it('should replace cycles', () => {
+        const a = {};
+        a.cycle = a;
+        a.arrCycle = [a];
+
+        equals(
+            JSON.stringify(replaceCycles(a, path => `<Cycle ${path}>`)),
+            '{"cycle":"<Cycle root.cycle>","arrCycle":["<Cycle root.arrCycle[0]>"]}'
+        );
+    });
+});
+
